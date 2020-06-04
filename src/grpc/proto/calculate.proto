@@ -1,0 +1,21 @@
+syntax="proto3";
+
+package calculate;
+
+service CalculateMatrix {
+  rpc MatrixSum (MatrixRequest) returns (MatrixResponse) {}
+  rpc MatrixMul (MatrixRequest) returns (MatrixResponse) {}
+}
+
+message Array {
+  repeated double digit = 1;
+}
+
+message MatrixRequest {
+  repeated Array matrix1 = 1;
+  repeated Array matrix2 = 2;
+}
+
+message MatrixResponse {
+  repeated Array matrix = 1;
+}

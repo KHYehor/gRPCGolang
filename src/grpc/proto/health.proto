@@ -1,0 +1,13 @@
+syntax="proto3";
+
+package health;
+
+service checkHealth {
+  rpc health (healthRequest) returns (healthResponse) {}
+}
+
+message healthResponse {
+  uint64 memoryAllocated = 1;
+}
+
+message healthRequest {}
