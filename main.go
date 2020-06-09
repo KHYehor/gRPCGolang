@@ -2,8 +2,9 @@ package main
 
 import (
 	"github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/calculate"
-	"github.com/KHYehor/gRPCGolang/src/modules/server"
+	healthgrpc "github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/health"
 	"github.com/KHYehor/gRPCGolang/src/modules/health"
+	"github.com/KHYehor/gRPCGolang/src/modules/server"
 	"google.golang.org/grpc"
 	"net"
 )
@@ -27,8 +28,8 @@ func startHealthServer(address string) (error) {
 		return err
 	}
 	grpcServer := grpc.NewServer()
-	s := health.
-	calculate.RegisterCalculateMatrixServer(grpcServer, s)
+	s := &health.HealthServer{}
+	healthgrpc.RegisterCheckHealthServer(grpcServer, s)
 	grpcServer.Serve(lis)
 	return nil
 }
