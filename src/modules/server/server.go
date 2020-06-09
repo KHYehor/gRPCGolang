@@ -3,13 +3,9 @@ package server
 import (
 	"context"
 	"errors"
-	//"github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/calculate"
-	//"github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/health"
-	"github.com/KHYehor/gRPCBalancer/src/grpc/calculate"
-	"github.com/KHYehor/grpcBalancer/src/grpc/health"
-	"google.golang.org/grpc"
+	"github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/calculate"
+	"github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/health"
 	"runtime"
-	"time"
 )
 
 var CORES = runtime.NumCPU()
@@ -19,7 +15,7 @@ type Server struct {
 }
 
 func (s *Server) MatrixSum(ctx context.Context, req *calculate.MatrixRequest) (*calculate.MatrixResponse, error) {
-	if !validateMatrixSumSize(req.Matrix1, req.Matrix2) {
+	if !validateMatrixEqualSize(req.Matrix1, req.Matrix2) {
 		return nil, errors.New("mismatch of matrix sizes")
 	}
 	result := []*calculate.Array{}
@@ -39,20 +35,4 @@ func (s *Server) MatrixMul(ctx context.Context, req *calculate.MatrixRequest) (*
 		matrixMul(req.Matrix1, req.Matrix2)
 	}
 	return nil, nil
-}
-
-func (s *Server) StartCheckHealth(ctx context.Context, addresses []string) {
-	conn, err := grpc.Dial("")
-	if err != nil {
-		panic("error")
-	}
-	defer conn.Close()
-	healthChecker := health.NewCheckHealthClient(conn)
-	request := &health.HealthRequest{}
-	for range time.Tick(time.Second * 1) {
-		_, err := healthChecker.Health(context.Background(), request)
-		if err != nil {
-			// rebuild ring function
-		}
-	}
 }

@@ -7,12 +7,12 @@ import (
 
 type matrixOperation func([]*calculate.Array, []*calculate.Array) []*calculate.Array
 
-
+// Will be done soon
 func matrixMul(matrix1 []*calculate.Array, matrix2 []*calculate.Array) []*calculate.Array {
 	return []*calculate.Array{}
 }
 
-func validateMatrixSumSize(matrix1 []*calculate.Array, matrix2 []*calculate.Array) bool {
+func validateMatrixEqualSize(matrix1 []*calculate.Array, matrix2 []*calculate.Array) bool {
 	if len(matrix1) != len(matrix2) {
 		return false
 	}
@@ -46,15 +46,6 @@ func copyMatrixes(matrix1 []*calculate.Array, matrix2 []*calculate.Array, from i
 		copiedMatrix1 = append(copiedMatrix1, matrix1[i])
 		copiedMatrix2 = append(copiedMatrix2, matrix2[i])
 	}
-	//// Copy appropirate second array
-	//for i := 0; i < len(matrix2); i++ {
-	//	subArray := matrix2[i]
-	//	subArray.Digit = []float64{}
-	//	for j := from; j < to; j++ {
-	//		subArray.Digit = append(subArray.Digit, matrix2[i].Digit[j])
-	//	}
-	//	copiedMatrix2 = append(copiedMatrix2, subArray)
-	//}
 	return copiedMatrix1, copiedMatrix2
 }
 
