@@ -3,36 +3,44 @@ package main
 import (
 	"github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/calculate"
 	"github.com/KHYehor/gRPCGolang/src/modules/server"
+	"github.com/KHYehor/gRPCGolang/src/modules/health"
 	"google.golang.org/grpc"
 	"net"
 )
 
-var addresses = []string{
-	"",
-	"",
-	"",
-}
-
-func getAddressListener(address string) (net.Listener, error) {
+// Rewrite to factory
+func startGrpcServer(address string) (error) {
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return lis, nil
-}
-
-func getServer(addresses []string) *grpc.Server {
 	grpcServer := grpc.NewServer()
 	s := &server.Server{}
 	calculate.RegisterCalculateMatrixServer(grpcServer, s)
-	return grpcServer
+	grpcServer.Serve(lis)
+	return nil
 }
 
-func main() {
-	listener, err := getAddressListener("127.0.0.1:5000")
+func startHealthServer(address string) (error) {
+	lis, err := net.Listen("tcp", address)
 	if err != nil {
-		panic("Can't listen address")
+		return err
 	}
-	server := getServer(addresses)
-	server.Serve(listener)
+	grpcServer := grpc.NewServer()
+	s := health.
+	calculate.RegisterCalculateMatrixServer(grpcServer, s)
+	grpcServer.Serve(lis)
+	return nil
+}
+
+
+func main() {
+	err := startGrpcServer("127.0.0.1:5000")
+	if err != nil {
+		panic(err)
+	}
+	err = startHealthServer("127.0.0.1:6000")
+	if err != nil {
+		panic(err)
+	}
 }
