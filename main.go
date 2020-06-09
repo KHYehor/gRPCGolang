@@ -1,9 +1,8 @@
 package main
 
 import (
-	"context"
-	"github.com/KHYehor/gRPCBalancer/src/grpc/calculate"
-	"github.com/KHYehor/gRPCBalancer/src/server"
+	"github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/calculate"
+	"github.com/KHYehor/gRPCGolang/src/modules/server"
 	"google.golang.org/grpc"
 	"net"
 )
@@ -22,10 +21,9 @@ func getAddressListener(address string) (net.Listener, error) {
 	return lis, nil
 }
 
-func getLoadBalancer(addresses []string) *grpc.Server {
+func getServer(addresses []string) *grpc.Server {
 	grpcServer := grpc.NewServer()
-	s := &server.LoadBalancer{}
-	s.InitServers(context.Background(), addresses)
+	s := &server.Server{}
 	calculate.RegisterCalculateMatrixServer(grpcServer, s)
 	return grpcServer
 }
@@ -35,6 +33,6 @@ func main() {
 	if err != nil {
 		panic("Can't listen address")
 	}
-	server := getLoadBalancer(addresses)
+	server := getServer(addresses)
 	server.Serve(listener)
 }

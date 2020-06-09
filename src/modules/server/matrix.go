@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/KHYehor/gRPCBalancer/src/grpc/calculate"
+	"github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/calculate"
 	"sync"
 )
 
@@ -41,7 +41,6 @@ func matrixSum(matrix1 []*calculate.Array, matrix2 []*calculate.Array) []*calcul
 func copyMatrixes(matrix1 []*calculate.Array, matrix2 []*calculate.Array, from int, to int) ([]*calculate.Array, []*calculate.Array) {
 	var copiedMatrix1 []*calculate.Array
 	var copiedMatrix2 []*calculate.Array
-	// Copy appropirate first array
 	for i := from; i < to; i++ {
 		copiedMatrix1 = append(copiedMatrix1, matrix1[i])
 		copiedMatrix2 = append(copiedMatrix2, matrix2[i])
