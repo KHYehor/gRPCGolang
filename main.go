@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/calculate"
 	healthgrpc "github.com/KHYehor/gRPCGolang/src/grpc/grpcModules/health"
 	"github.com/KHYehor/gRPCGolang/src/modules/health"
@@ -9,38 +10,30 @@ import (
 	"net"
 )
 
-// Rewrite to factory
-func startGrpcServer(address string) (error) {
+// Factory of gRPC servers
+func grpcServerFactory(serverType string, address string) (error) {
+	grpcServer := grpc.NewServer()
+	if serverType == "calculate" {
+		calculate.RegisterCalculateMatrixServer(grpcServer, &server.Server{})
+	} else if serverType == "health" {
+		healthgrpc.RegisterCheckHealthServer(grpcServer, &health.HealthServer{})
+	} else {
+		return errors.New("unknown server type")
+	}
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
 		return err
 	}
-	grpcServer := grpc.NewServer()
-	s := &server.Server{}
-	calculate.RegisterCalculateMatrixServer(grpcServer, s)
 	grpcServer.Serve(lis)
 	return nil
 }
-
-func startHealthServer(address string) (error) {
-	lis, err := net.Listen("tcp", address)
-	if err != nil {
-		return err
-	}
-	grpcServer := grpc.NewServer()
-	s := &health.HealthServer{}
-	healthgrpc.RegisterCheckHealthServer(grpcServer, s)
-	grpcServer.Serve(lis)
-	return nil
-}
-
 
 func main() {
-	err := startGrpcServer("127.0.0.1:5000")
+	err := grpcServerFactory("calculate", "127.0.0.1:5000")
 	if err != nil {
 		panic(err)
 	}
-	err = startHealthServer("127.0.0.1:6000")
+	err = grpcServerFactory("health", "127.0.0.1:5000")
 	if err != nil {
 		panic(err)
 	}

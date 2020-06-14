@@ -24,12 +24,21 @@ func validateMatrixEqualSize(matrix1 []*calculate.Array, matrix2 []*calculate.Ar
 	return true
 }
 
+func createEmptyArray(size int, row int) []*calculate.Array {
+	var empty []*calculate.Array
+	for i := 0; i < size; i++ {
+		emptyRow := []float64{}
+		for j := 0; j < row; j++ {
+			emptyRow = append(emptyRow, 0)
+		}
+		empty = append(empty, &calculate.Array{Digit: emptyRow })
+	}
+	return empty
+}
+
 func matrixSum(matrix1 []*calculate.Array, matrix2 []*calculate.Array) []*calculate.Array {
 	// Init result array
-	var result = []*calculate.Array{}
-	for i := 0; i < len(matrix1); i++ {
-		result = append(result, &calculate.Array{})
-	}
+	var result = createEmptyArray(len(matrix1), len(matrix1[0].Digit))
 	for i := 0; i < len(matrix1); i++ {
 		for j := 0; j < len(matrix1); j++ {
 			result[i].Digit[j] = matrix1[i].Digit[j] + matrix2[i].Digit[j]
@@ -51,7 +60,7 @@ func copyMatrixes(matrix1 []*calculate.Array, matrix2 []*calculate.Array, from i
 func calculateWithParallelism(matrix1 []*calculate.Array, matrix2 []*calculate.Array, operation matrixOperation) []*calculate.Array {
 	var wg sync.WaitGroup
 	wg.Add(CORES)
-	step := len(matrix1)/CORES
+	step := len(matrix1) / CORES
 	var result []*calculate.Array
 	var temp [][]*calculate.Array
 	// Init array of necessary size
@@ -61,7 +70,7 @@ func calculateWithParallelism(matrix1 []*calculate.Array, matrix2 []*calculate.A
 	for coresCounter := 0; coresCounter < CORES; coresCounter++ {
 		go func(i int) {
 			defer wg.Done()
-			copiedMatrix1, copiedMatrix2 := copyMatrixes(matrix1, matrix2, step * i, step * (i + 1))
+			copiedMatrix1, copiedMatrix2 := copyMatrixes(matrix1, matrix2, step*i, step*(i+1))
 			temp[i] = operation(copiedMatrix1, copiedMatrix2)
 		}(coresCounter)
 	}
