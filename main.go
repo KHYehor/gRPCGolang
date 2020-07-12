@@ -29,7 +29,7 @@ func grpcServerFactory(serverType string, address string) (error) {
 }
 
 func main() {
-	err := grpcServerFactory("calculate", "127.0.0.1:500")
+	err := grpcServerFactory("calculate", "127.0.0.1:5000")
 	if err != nil {
 		panic(err)
 	}
